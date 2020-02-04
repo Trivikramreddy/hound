@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Trivikramreddyhound/config"
+	"github.com/Trivikramreddy/hound/config"
 	"github.com/Trivikramreddy/hound/index"
 	"github.com/Trivikramreddy/hound/searcher"
 )
