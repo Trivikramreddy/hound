@@ -1,6 +1,7 @@
 import React from 'react';
 import { Model } from '../../helpers/Model';
 import { FilesView } from './FilesView';
+import { Repo } from './Repo';
 
 export const ResultView = (props) => {
 
@@ -26,29 +27,52 @@ export const ResultView = (props) => {
         );
     }
 
-    const repos = results
-        ? results.map((result, index) => (
-            <div className="repo" key={`results-view-${index}`}>
-                <div className="title">
-                    <span className="mega-octicon octicon-repo"></span>
-                    <span className="name">{ Model.NameForRepo(result.Repo) }</span>
-                </div>
-                <FilesView
-                    matches={ result.Matches }
-                    rev={ result.Rev }
-                    repo={ result.Repo }
-                    regexp={ regexp }
-                    totalMatches={ result.FilesWithMatch }
-                />
+    const openOrCloseAll = (to_open) => {
+        for (let index of reposShowState) {
+            let state, setState = reposShowState[index]
+            if (to_open) {
+                setState(true)
+            } else {
+                setState(false)
+            }
+        }
+    }
+    const openAll = () => {
+        this.openOrCloseAll(true)
+    }
+    const closeAll = () => {
+        this.openOrCloseAll(false)
+    }
+
+    const actions = (
+            <div className="actions">
+              <button onClick={ openAll }><span className="octicon octicon-chevron-down"></span> Expand all</button>
+              <button onClick={ closeAll }><span className="octicon octicon-chevron-up"></span> Collapse all</button>
             </div>
-        ))
-        : '';
+    )
+
+    const reposShowState = {}
+    const repos = results
+          ? results.map((result, index) => {
+              const state = useState(true)
+              reposShowState[index] = state
+              return (
+            <Repo ref={"repo-"+index}
+                  matches={result.Matches}
+                  rev={result.Rev}
+                  repo={result.Repo}
+                  stateShow={state}
+                  regexp={regexp}
+                  files={result.FilesWithMatch}/>
+              )
+          }) : '';
 
     return (
         <div id="result">
             <div id="no-result" className={ isLoading && 'loading' || 'hidden' }>
                 <img src="images/busy.gif" /><div>Searching...</div>
             </div>
+            { actions }
             { repos }
         </div>
     );
