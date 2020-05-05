@@ -6,6 +6,7 @@ import { Match } from './Match';
 export const File = (props) => {
 
     const { repo, rev, match, regexp } = props;
+    const [ showContent, setShowContent] = useState(true);
     const filename = match.Filename;
     const blocks = CoalesceMatches(match.Matches);
 
@@ -28,9 +29,13 @@ export const File = (props) => {
         />
     ));
 
+    const toggleContent = () => {
+        setShowContent(!showContent)
+    }
+
     return (
-        <div className="file">
-            <div className="title">
+        <div className={"file" + (showContent ? "open" : "closed")}>
+            <div className="title" onClick={ toggleContent }>
                 <a href={ Model.UrlToRepo(repo, filename, null, rev) }>
                     { filename }
                 </a>
